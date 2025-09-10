@@ -1,0 +1,62 @@
+name: Build and Test Strict
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Install dependencies (Linux/macOS)
+      if: runner.os != 'Windows'
+      run: |
+        sudo apt-get update || true
+        if [[ "$RUNNER_OS" == "Linux" ]]; then
+          sudo apt-get install -y llvm clang nasm cmake build-essential
+        elif [[ "$RUNNER_OS" == "macOS" ]]; then
+          brew install llvm nasm cmake
+        fi
+
+    - name: Install dependencies (Windows)
+      if: runner.os == 'Windows'
+      run: |
+        choco install llvm nasm cmake -y
+
+    - name: Configure CMake
+      run: cmake -S . -B build
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Run Tests
+      if: runner.os != 'Windows' # tests rely on bash runner
+      run: |
+        cd tests
+        chmod +x run_tests.sh
+        ./run_tests.sh
+
+    - name: Package Windows binary
+      if: runner.os == 'Windows'
+      run: |
+        mkdir dist
+        copy build\\Release\\strictc.exe dist\\
+        copy src\\runtime.obj dist\\
+        powershell Compress-Archive -Path dist\\* -DestinationPath strictc-windows.zip
+
+    - name: Upload Windows artifact
+      if: runner.os == 'Windows'
+      uses: actions/upload-artifact@v3
+      with:
+        name: strictc-windows
+        path: strictc-windows.zip
