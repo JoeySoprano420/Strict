@@ -1,0 +1,52 @@
+-- OOP Demo Program
+-- Features: classes, inheritance, polymorphism, encapsulation
+
+Class Person
+    Let name
+
+    Func Init(n)
+        name = n
+    End
+
+    Func Speak()
+        Print "I am " + name
+    End
+End
+
+Class Student : Person
+    Let major
+
+    Func Init(n, m)
+        Call Parent.Init(n)
+        major = m
+    End
+
+    Func Speak()
+        Print name + " studies " + major
+    End
+End
+
+Class BankAccount
+    Private Let balance = 0
+
+    Func Deposit(amount)
+        balance = balance + amount
+    End
+
+    Func GetBalance()
+        Return balance
+    End
+End
+
+-- Demo: polymorphism
+Let p = New Person("Alice")
+Let s = New Student("Bob", "Physics")
+
+Call p.Speak()
+Call s.Speak()
+
+-- Demo: encapsulation
+Let acc = New BankAccount()
+Call acc.Deposit(200)
+Print "Balance is:"
+Print Call acc.GetBalance()
