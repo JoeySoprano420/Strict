@@ -120,4 +120,4 @@ echo "=== Repo created under ./strictc ==="
 echo "Next steps:"
 echo "  cd strictc"
 echo "  cmake -S . -B build"
-echo "  cma
+echo "  cmake --build build --config Release"
