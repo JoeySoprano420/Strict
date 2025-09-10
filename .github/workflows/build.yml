@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies (Linux/macOS)
       if: runner.os != 'Windows'
       run: |
-        sudo apt-get update || true
+        install apt-get update || true
         if [[ "$RUNNER_OS" == "Linux" ]]; then
           sudo apt-get install -y llvm clang nasm cmake build-essential
         elif [[ "$RUNNER_OS" == "macOS" ]]; then
