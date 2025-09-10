@@ -1,0 +1,47 @@
+-- Generics + Templates Demo Program
+-- Features: generic classes, generic functions, templates
+
+Class Box<T>
+    Let value
+
+    Func Init(v)
+        value = v
+    End
+
+    Func Get()
+        Return value
+    End
+End
+
+Func Identity<T>(x)
+    Return x
+End
+
+Template Max<T>(a, b)
+    If a > b Then
+        Return a
+    Else
+        Return b
+    End
+End
+
+-- Demo usage
+Let intBox = New Box<Int>(42)
+Print "Int Box contains:"
+Print Call intBox.Get()
+
+Let strBox = New Box<String>("Hello Strict")
+Print "String Box contains:"
+Print Call strBox.Get()
+
+Print "Identity Int:"
+Print Call Identity<Int>(99)
+
+Print "Identity String:"
+Print Call Identity<String>("Generics!")
+
+Print "Max of 7 and 3 (int):"
+Print Call Max<Int>(7, 3)
+
+Print "Max of 'apple' and 'zebra' (string):"
+Print Call Max<String>("apple", "zebra")
