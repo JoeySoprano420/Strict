@@ -1,0 +1,32 @@
+-- Match Demo Program
+-- Features: command system + number classifier
+
+Func MenuCommand(cmd)
+    Match cmd
+        Case "start": Print "System starting..."
+        Case "stop":  Print "System stopping..."
+        Case "quit":  Print "Exiting program..."
+        Case *:       Print "Unknown command"
+    End
+End
+
+Func ClassifyNumber(n)
+    Match n
+        Case 0: Print "Zero"
+        Case <0: Print "Negative number"
+        Case 1..9: Print "Small positive number"
+        Case 10..100: Print "Medium positive number"
+        Case *: Print "Large number"
+    End
+End
+
+-- Main loop
+For i = 1..3 Then
+    Print "Enter a command (start/stop/quit/other):"
+    Let cmd = Input
+    Call MenuCommand(cmd)
+
+    Print "Enter a number to classify:"
+    Let num = Input
+    Call ClassifyNumber(num)
+End
