@@ -270,3 +270,4 @@ This produces `strictc.zip` ready to share or attach.
 
 ---
 
+That’s it! You now have a fully structured repo, a working compiler build, a one-shot Windows builder, and a repeatable path to produce .exe (Windows) or native binaries (Linux/macOS).
