@@ -5,103 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Get Hypershade</title>
   <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #0e0e17;
-      color: #eee;
-      margin: 0; padding: 0;
-      text-align: center;
-    }
-    header {
-      padding: 2rem;
-      background: linear-gradient(90deg, #3a0ca3, #4361ee, #4cc9f0);
-      color: white;
-    }
+    body { font-family: system-ui, sans-serif; background: #0e0e17; color: #eee; margin: 0; padding: 0; text-align: center; }
+    header { padding: 2rem; background: linear-gradient(90deg, #3a0ca3, #4361ee, #4cc9f0); color: white; }
     h1 { font-size: 2.5rem; margin: 0; }
-    h2 { margin-top: 1rem; }
-    pre {
-      background: #1a1a2e;
-      color: #4cc9f0;
-      padding: 1rem;
-      border-radius: 6px;
-      overflow-x: auto;
-    }
+    pre { background: #1a1a2e; color: #4cc9f0; padding: 1rem; border-radius: 6px; overflow-x: auto; }
     section { padding: 2rem; }
-    footer {
-      padding: 1rem;
-      font-size: 0.9rem;
-      background: #111;
-      color: #aaa;
-    }
-    .btn {
-      display: inline-block;
-      padding: 0.8rem 1.5rem;
-      margin: 0.5rem;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1rem;
-      transition: all 0.2s ease;
-    }
+    footer { padding: 1rem; font-size: 0.9rem; background: #111; color: #aaa; }
+    .btn { display: inline-block; padding: 0.8rem 1.5rem; margin: 0.5rem; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 1rem; transition: all 0.2s ease; }
     .btn:hover { opacity: 0.8; }
     .btn-primary { background: #4cc9f0; color: #000; }
     .btn-secondary { background: #3a0ca3; color: #fff; }
-    .os-panel {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-    .os-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: #1a1a2e;
-      color: #eee;
-      border-radius: 6px;
-      padding: 0.7rem 1.2rem;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
+    .os-panel { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
+    .os-btn { display: flex; align-items: center; gap: 0.5rem; background: #1a1a2e; color: #eee; border-radius: 6px; padding: 0.7rem 1.2rem; text-decoration: none; font-weight: bold; transition: background 0.2s; }
     .os-btn:hover { background: #2a2a40; }
-    .os-btn img {
-      width: 24px;
-      height: 24px;
-    }
+    .os-btn img { width: 24px; height: 24px; }
   </style>
   <script>
+    async function loadRelease() {
+      try {
+        const repo = "ORG/REPO"; // 🔧 replace with your repo
+        const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`);
+        const release = await res.json();
+        const version = release.tag_name;
+        const assets = release.assets || [];
+
+        // Update version section
+        document.getElementById("latest-version").innerHTML =
+          `Latest Release: <b>${version}</b> — <a href="${release.html_url}">release notes</a>`;
+
+        // Map assets to buttons
+        const linuxAsset = assets.find(a => a.name.endsWith(".deb")) || assets.find(a => a.name.endsWith(".rpm"));
+        const macAsset   = assets.find(a => a.name.endsWith(".pkg"));
+        const winAsset   = assets.find(a => a.name.endsWith(".msi"));
+
+        let html = "";
+        if (linuxAsset) {
+          html += `<a class="os-btn" href="${linuxAsset.browser_download_url}">
+                     <img src="https://img.icons8.com/color/48/linux.png"/> Linux (.deb/.rpm)
+                   </a>`;
+        }
+        if (macAsset) {
+          html += `<a class="os-btn" href="${macAsset.browser_download_url}">
+                     <img src="https://img.icons8.com/color/48/mac-os.png"/> macOS (.pkg)
+                   </a>`;
+        }
+        if (winAsset) {
+          html += `<a class="os-btn" href="${winAsset.browser_download_url}">
+                     <img src="https://img.icons8.com/color/48/windows-10.png"/> Windows (.msi)
+                   </a>`;
+        }
+        document.getElementById("os-buttons").innerHTML = html;
+      } catch (err) {
+        console.error("Failed to fetch release:", err);
+        document.getElementById("latest-version").innerText = "⚠️ Unable to load latest release.";
+      }
+    }
+
     function detectPlatform() {
-      const userAgent = navigator.userAgent.toLowerCase();
-      if (userAgent.includes("win")) {
+      const ua = navigator.userAgent.toLowerCase();
+      if (ua.includes("win")) {
         document.getElementById("install").innerHTML = `
           <h2>Windows (PowerShell)</h2>
           <pre>irm https://get.hypershade.org/install.ps1 | iex</pre>
-          <p>or use <b>winget</b> / <b>choco</b>.</p>
-        `;
-      } else if (userAgent.includes("mac")) {
+          <p>or use <b>winget</b> / <b>choco</b>.</p>`;
+      } else if (ua.includes("mac")) {
         document.getElementById("install").innerHTML = `
           <h2>macOS</h2>
           <pre>brew install ORG/hypershade/hypershade</pre>
           <p>or</p>
-          <pre>curl -fsSL https://get.hypershade.org/install.sh | bash</pre>
-        `;
-      } else if (userAgent.includes("linux")) {
+          <pre>curl -fsSL https://get.hypershade.org/install.sh | bash</pre>`;
+      } else if (ua.includes("linux")) {
         document.getElementById("install").innerHTML = `
           <h2>Linux</h2>
           <pre>curl -fsSL https://get.hypershade.org/install.sh | bash</pre>
-          <p>Supports <b>apt</b>, <b>dnf/rpm</b>, <b>snap</b>, <b>flatpak</b>.</p>
-        `;
+          <p>Supports <b>apt</b>, <b>dnf/rpm</b>, <b>snap</b>, <b>flatpak</b>.</p>`;
       } else {
         document.getElementById("install").innerHTML = `
           <h2>Other Platforms</h2>
           <p>Download from GitHub Releases:</p>
-          <a class="btn btn-primary" href="https://github.com/ORG/REPO/releases">Releases</a>
-        `;
+          <a class="btn btn-primary" href="https://github.com/ORG/REPO/releases">Releases</a>`;
       }
     }
-    window.onload = detectPlatform;
+
+    window.onload = () => { detectPlatform(); loadRelease(); }
   </script>
 </head>
 <body>
@@ -116,17 +102,11 @@
 
   <section>
     <h2>⬇️ Direct Downloads</h2>
-    <div class="os-panel">
-      <a class="os-btn" href="https://github.com/ORG/REPO/releases/latest/download/hypershade.deb">
-        <img src="https://img.icons8.com/color/48/linux.png"/> Linux (.deb/.rpm)
-      </a>
-      <a class="os-btn" href="https://github.com/ORG/REPO/releases/latest/download/hypershade.pkg">
-        <img src="https://img.icons8.com/color/48/mac-os.png"/> macOS (.pkg)
-      </a>
-      <a class="os-btn" href="https://github.com/ORG/REPO/releases/latest/download/hypershade.msi">
-        <img src="https://img.icons8.com/color/48/windows-10.png"/> Windows (.msi)
-      </a>
-    </div>
+    <div id="os-buttons" class="os-panel">Loading...</div>
+  </section>
+
+  <section>
+    <h2 id="latest-version">Loading latest release...</h2>
   </section>
 
   <section>
@@ -134,11 +114,6 @@
     <a class="btn btn-primary" href="https://github.com/ORG/REPO">Source</a>
     <a class="btn btn-secondary" href="https://github.com/ORG/REPO/releases">Releases</a>
     <a class="btn btn-primary" href="https://docs.hypershade.org">Docs</a>
-  </section>
-
-  <section>
-    <h2>Latest Release: v1.2.0</h2>
-    <p>See <a href="https://github.com/ORG/REPO/releases/tag/v1.2.0">release notes</a>.</p>
   </section>
 
   <footer>
