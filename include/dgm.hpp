@@ -2,8 +2,12 @@
 #include <string>
 #include <llvm/IR/Module.h>
 
-// Translate LLVM IR to DGM opcode stream
+// === DGM Translator ===
+// Takes an LLVM module and writes out a .dgm file
+// with 144-opcode mapped instruction stream.
 void translateModuleToDGM(llvm::Module &M, const std::string &filename);
 
-// Emit NASM x64 assembly from DGM file
+// === DGM Emitter ===
+// Reads a .dgm file and produces NASM x64 assembly
+// ready for `nasm -f win64`.
 void emitDGMtoNASM(const std::string &dgmFile, const std::string &nasmFile);
