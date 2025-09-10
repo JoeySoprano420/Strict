@@ -1,0 +1,21 @@
+-- Hello + Demo Program
+-- Features: variables, input, if/else, loop, function call, print
+
+Func Square(n)
+    Return n * n
+End
+
+Print "Enter a number:"
+Let x = Input
+
+If x < 0 Then
+    Print "Negative number"
+Else
+    Print "Square is:"
+    Print Call Square(x)
+End
+
+For i = 1..5 Then
+    Print "Loop iteration:"
+    Print i
+End
