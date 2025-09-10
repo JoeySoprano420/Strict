@@ -61,17 +61,17 @@ Add a **deploy job** after `release`:
 * **Developers:**
 
   ```bash
-  curl -fsSL https://get.hypershade.org/install.sh | bash
-  winget install Hypershade.Hypershade
-  brew install ORG/hypershade/hypershade
-  choco install hypershade
-  snap install hypershade --classic
-  flatpak install flathub org.hypershade.hscc
+  curl -fsSL https://get.strict.org/install.sh | bash
+  winget install strict.strict
+  brew install ORG/strict/strict
+  choco install strict
+  snap install strict --classic
+  flatpak install flathub org.strict.hscc
   ```
 
 * **New users:**
 
-  * Visit **get.hypershade.org**
+  * Visit **get.strict.org**
   * Site auto-detects OS + shows correct snippet
   * OS buttons link to **latest release artifacts**
   * Version + release notes pulled directly from GitHub API
