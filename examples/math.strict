@@ -1,0 +1,22 @@
+-- Math Demo Program
+-- Features: arithmetic, safe arithmetic, match-case
+
+Func AddAndDivide(a, b, c)
+    Let sum = Safe.Add a, b
+    Return Safe.Div sum, c
+End
+
+Print "Enter three numbers (a, b, c):"
+Let a = Input
+Let b = Input
+Let c = Input
+
+Let result = Call AddAndDivide(a, b, c)
+
+Match result
+    Case 0: Print "Result is zero"
+    Case 1..5: Print "Result is small"
+    Case 6..100: Print "Result is medium"
+    Case <0: Print "Error or negative result"
+    Case *: Print "Result is large"
+End
